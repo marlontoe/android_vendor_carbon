@@ -38,3 +38,5 @@ add_lunch_combo carbon_taoshan-userdebug
 add_lunch_combo carbon_toro-userdebug
 add_lunch_combo carbon_toroplus-userdebug
 add_lunch_combo carbon_vs980-userdebug
+add_lunch_combo carbon_nozomi-userdebug
+add_lunch_combo carbon_nozomi-user
