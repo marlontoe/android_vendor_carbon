@@ -252,3 +252,8 @@ $(call inherit-product-if-exists, frameworks/base/data/sounds/AudioPackage10.mk)
 $(call inherit-product-if-exists, frameworks/base/data/sounds/AudioPackage11.mk)
 $(call inherit-product-if-exists, frameworks/base/data/sounds/AudioPackage12.mk)
 $(call inherit-product-if-exists, frameworks/base/data/sounds/AudioPackage12_48.mk)
+
+# Terminal Emulator
+PRODUCT_COPY_FILES +=  \
+    vendor/carbon/proprietary/Term.apk:system/app/Term.apk \
+    vendor/carbon/proprietary/lib/armeabi/libjackpal-androidterm4.so:system/lib/libjackpal-androidterm4.so
