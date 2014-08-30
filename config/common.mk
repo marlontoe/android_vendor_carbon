@@ -75,7 +75,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     vendor/carbon/prebuilt/common/lib/modules/frandom.ko:system/modules/frandom.ko \
     vendor/carbon/prebuilt/common/etc/init.d/22frandom:system/etc/init.d/22frandom \
-    vendor/carbon/prebuilt/common/etc/xbin/ftest:system/etc/xbin/ftest
+    vendor/carbon/prebuilt/common/xbin/ftest:system/xbin/ftest
 
 # some basic init.d scripts
 PRODUCT_COPY_FILES += \
