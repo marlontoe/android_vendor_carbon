@@ -78,6 +78,7 @@ PRODUCT_COPY_FILES += \
     vendor/carbon/prebuilt/common/etc/xbin/ftest:system/etc/xbin/ftest
 
 # some basic init.d scripts
+PRODUCT_COPY_FILES += \
     vendor/carbon/prebuilt/common/etc/init.d/00init:system/etc/init.d/00init \
     vendor/carbon/prebuilt/common/etc/init.d/01sysctl:system/etc/init.d/01sysctl
 
