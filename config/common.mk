@@ -77,6 +77,10 @@ PRODUCT_COPY_FILES += \
     vendor/carbon/prebuilt/common/etc/init.d/22frandom:system/etc/init.d/22frandom \
     vendor/carbon/prebuilt/common/etc/xbin/ftest:system/etc/xbin/ftest
 
+# some basic init.d scripts
+    vendor/carbon/prebuilt/common/etc/init.d/00init:system/etc/init.d/00init \
+    vendor/carbon/prebuilt/common/etc/init.d/01sysctl:system/etc/init.d/01sysctl
+
 # main packages
 PRODUCT_PACKAGES += \
     BluetoothExt \
