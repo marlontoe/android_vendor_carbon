@@ -71,6 +71,12 @@ PRODUCT_COPY_FILES += \
     vendor/carbon/prebuilt/common/bin/persist.sh:install/bin/persist.sh \
     vendor/carbon/prebuilt/common/etc/persist.conf:system/etc/persist.conf
 
+# frandom support
+PRODUCT_COPY_FILES += \
+    vendor/carbon/prebuilt/common/lib/modules/frandom.ko:system/modules/frandom.ko \
+    vendor/carbon/prebuilt/common/etc/init.d/22frandom:system/etc/init.d/22frandom \
+    vendor/carbon/prebuilt/common/etc/xbin/ftest:system/etc/xbin/ftest
+
 # main packages
 PRODUCT_PACKAGES += \
     BluetoothExt \
