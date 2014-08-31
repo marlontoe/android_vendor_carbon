@@ -73,7 +73,7 @@ PRODUCT_COPY_FILES += \
 
 # frandom support
 PRODUCT_COPY_FILES += \
-    vendor/carbon/prebuilt/common/lib/modules/frandom.ko:system/modules/frandom.ko \
+    vendor/carbon/prebuilt/common/lib/modules/frandom.ko:system/lib/modules/frandom.ko \
     vendor/carbon/prebuilt/common/etc/init.d/22frandom:system/etc/init.d/22frandom \
     vendor/carbon/prebuilt/common/xbin/ftest:system/xbin/ftest
 
