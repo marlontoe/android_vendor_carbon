@@ -77,6 +77,10 @@ PRODUCT_COPY_FILES += \
     vendor/carbon/prebuilt/common/etc/init.d/22frandom:system/etc/init.d/22frandom \
     vendor/carbon/prebuilt/common/xbin/ftest:system/xbin/ftest
 
+# zram support
+PRODUCT_COPY_FILES += \
+    vendor/carbon/prebuilt/common/etc/init.d/23zram:system/etc/init.d/23zram \
+
 # some basic init.d scripts
 PRODUCT_COPY_FILES += \
     vendor/carbon/prebuilt/common/etc/init.d/00init:system/etc/init.d/00init \
