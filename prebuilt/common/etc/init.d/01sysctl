@@ -1,2 +1,2 @@
 #!/system/bin/sh
-busybox sysctl -p
+sysctl -p
