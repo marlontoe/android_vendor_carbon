@@ -259,5 +259,10 @@ ro.romstats.version=$(CARBON_VERSION)
 # by default, do not update the recovery with system updates
 PRODUCT_PROPERTY_OVERRIDES += persist.sys.recovery_update=false
 
+# Terminal Emulator
+PRODUCT_COPY_FILES += \
+    vendor/carbon/proprietary/Term.apk:system/app/Term.apk \
+    vendor/carbon/proprietary/lib/armeabi/libjackpal-androidterm4.so:system/lib/libjackpal-androidterm4.so
+
 # Audio
 $(call inherit-product-if-exists, frameworks/base/data/sounds/CopyAudioFiles.mk)
