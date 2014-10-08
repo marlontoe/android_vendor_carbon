@@ -90,6 +90,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     BluetoothExt \
     Camera \
+    Calendar \
     Development \
     CMFileManager \
     Galaxy4 \
