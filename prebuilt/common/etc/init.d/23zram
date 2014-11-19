@@ -1,61 +1,79 @@
-#!/system/bin/sh
-LOG="/data/zram.log"
+#!/system/xbin/busybox ash
 BBOX="/system/xbin/busybox"
-# NUMCPUS=`grep -c ^processor /proc/cpuinfo`
-NUMCPUS=1
+log_file_name="zram"
+log_file_path="/data/logs"
+
+### LOG FILE HANDLING
+if [ ! -e $log_file_path ]; then
+	    mkdir -p $log_file_path; fi;
+LOG=$log_file_path/$log_file_name.log;
+if [ -e $LOG ] ; then mv $LOG $LOG.bak;
+else 
+echo "creating new log file"; touch $LOG;
+fi;
+
+(
+echo 
+echo "logfile ready! __________________"
+echo
+echo
+# CHECK AVAILABLE CPUS
+NUMCPUS=`grep -c ^processor /proc/cpuinfo`
 ### ASSUME SINGLE CORE IF WE GET ANY ERRORS
-# [ "$NUMCPUS" != 0 ] || NUMCPUS=1
+[ "$NUMCPUS" != 0 ] || NUMCPUS=1
 ### DECREMENTED NUMCUPS
 DECR_NUMCPUS=$((NUMCPUS - 1))
 ### CALCULATE ZRAMSIZE
 RAMSIZE=$(grep MemTotal /proc/meminfo | grep -E --only-matching '[[:digit:]]+')
-ZRAMSIZE=$((RAMSIZE * 1024 / 2))
-
-### LOG FILE HANDLING
-if [ -f $LOG ] ; then rm $LOG; fi;
+ZRAMSIZE=$((RAMSIZE * 1024 / 4))
 
 ### SCRIPT START
-echo "creating: zram device(s)=$NUMCPUS | size (per device)=$ZRAMSIZE now!" > "$LOG"
+echo "creating: zram device(s)=$NUMCPUS | size (per device)=$ZRAMSIZE now!"
 
 ### INSMOD ZRAM-MODULE ON BOOT
-if $BBOX [ -f /system/lib/modules/zram.ko ]; then
+if [ -f /system/lib/modules/zram.ko ]; then
     if $BBOX [ -z "`$BBOX lsmod | $BBOX grep zram`" ]; then
-        $BBOX insmod /system/lib/modules/zram.ko; >> "$LOG"
+        $BBOX insmod /system/lib/modules/zram.ko;
     fi;
-    $BBOX modprobe zram zram_num_devices="$NUMCUPS"; >> "$LOG"
+    $BBOX modprobe zram zram_num_devices="$NUMCUPS";
 fi; sleep 1
 
-echo "____________________________" >> $LOG
-echo >> "$LOG"
-echo "lsmod module check:" >> $LOG
-lsmod | grep zram >> $LOG
-echo >> "$LOG"
-echo "____________________________" >> $LOG
+echo "____________________________"
+echo
+echo "lsmod module check:"
+lsmod | grep zram 
+echo
+echo "____________________________"
 
 ### CREATE ZRAM DEVICE(S)
 for i in $(seq 0 $DECR_NUMCPUS); do
         if [ "$(grep /dev/block/zram"$i" /proc/swaps)" != "" ]; then
-		$BBOX swapoff /dev/block/zram"$i"; >> "$LOG"
+		$BBOX swapoff /dev/block/zram"$i";
 	sleep 1
-		$BBOX echo 1 > /sys/block/zram"$i"/reset; >> "$LOG"
-sleep 1
-fi; 	done;
-
+		$BBOX echo 1 > /sys/block/zram"$i"/reset; sleep 1;
+fi; done;
 for i in $(seq 0 $DECR_NUMCPUS); do
-		$BBOX echo $ZRAMSIZE > /sys/block/zram"$i"/disksize; >> "$LOG"
-	done;
+if [ ! -f /sys/block/zram"$i"/comp_algorithm ]; then
+          echo "Warning: cannot use LZ4 compression, defaulting to LZO (slower!)"
+        else
+          echo -n lz4 > /sys/block/zram"$i"/comp_algorithm;
+fi; done;
 for i in $(seq 0 $DECR_NUMCPUS); do
-		$BBOX mkswap /dev/block/zram"$i"; >> "$LOG"
-	done;
+		$BBOX echo $ZRAMSIZE > /sys/block/zram"$i"/disksize;
+done;
 for i in $(seq 0 $DECR_NUMCPUS); do
-		$BBOX swapon -p 100 /dev/block/zram"$i"; >> "$LOG"
-        done; sleep 3
-echo >> $LOG
-echo "____________________________" >> $LOG
-echo >> "$LOG"
-echo "dmesg check:" >> $LOG
-dmesg | grep zram >> $LOG
-echo "____________________________" >> $LOG
-echo >> $LOG
-echo "zram enabled | $(date)" >> "$LOG"
+		$BBOX mkswap /dev/block/zram"$i"; 
+done;
+for i in $(seq 0 $DECR_NUMCPUS); do
+		$BBOX swapon -p 100 /dev/block/zram"$i";
+done; sleep 3
+echo
+echo "____________________________"
+echo
+echo "dmesg check:"
+dmesg | grep zram
+echo "____________________________"
+echo
+echo "zram enabled | $(date)"
 exit
+) 2>&1 | tee $LOG
