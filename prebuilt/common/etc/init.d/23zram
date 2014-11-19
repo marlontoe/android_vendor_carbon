@@ -1,5 +1,7 @@
 #!/system/xbin/busybox ash
 BBOX="/system/xbin/busybox"
+LMK="500,1000,20000,20000,20000,25000"
+SWPNS="70"
 log_file_name="zram"
 log_file_path="/data/logs"
 
@@ -75,5 +77,20 @@ dmesg | grep zram
 echo "____________________________"
 echo
 echo "zram enabled | $(date)"
-exit
+
+### OPTIMIZE LMK & VM WRITEOUT
+echo "optimizing LMK & VM writeout"
+$BBOX chmod 664 /sys/module/lowmemorykiller/parameters/minfree;
+$BBOX echo "$LMK" > /sys/module/lowmemorykiller/parameters/minfree;
+$BBOX chmod 444 /sys/module/lowmemorykiller/parameters/minfree;
+$BBOX sysctl -e -w vm.swappiness=$SWPNS;
+echo "____________________________"
+echo
+echo "LMK check:"
+cat /sys/module/lowmemorykiller/parameters/minfree
+echo
+echo "SWAPPINESS check:"
+$BBOX sysctl -a | grep vm.swappiness
+echo "____________________________"
+echo
 ) 2>&1 | tee $LOG
